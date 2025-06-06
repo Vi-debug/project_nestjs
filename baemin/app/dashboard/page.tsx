@@ -1,10 +1,13 @@
+"use client";
 import HeaderNav from "@/components/headerNav";
 import ScrollBar from "@/components/scrollBar";
 import ScrollFood from "@/components/scrollFood";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getCategories } from "./service";
 
 export default function Home() {
+  const [list, setList] = useState<any[]>([]);
   const items = [
     {
       name: "Gà Rán",
@@ -102,23 +105,34 @@ export default function Home() {
       },
     ],
   };
+  useEffect(() => {
+    getCategories()
+      .then((res) => {
+        if (res.status === 200 && res.data.length > 0) {
+          setList(res.data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
   return (
     <>
       <div className="grid grid-cols-12 gap-4">
         <div className="col-span-3 pt-3 pl-8 pr-8  z-40">
           <div className="flex flex-col fixed  bg-white w-64 rounded-2xl  pl-3 pt-2  pb-5 gap-3  ">
             <span>Thực đơn </span>
-            {items.map((item, index) => (
+            {list.map((item, index) => (
               <div
                 key={index}
                 className="flex flex-col gap-3 cursor-pointer hover:bg-slate-100"
               >
                 <div className="flex flex-row items-center gap-1">
                   <Image
-                    src={item.imageSrc}
+                    src={"/images/noddle.png"}
                     width={30}
                     height={30}
-                    alt={item.description}
+                    alt={item.name}
                   />
                   <span>{item.name}</span>
                 </div>
@@ -128,7 +142,7 @@ export default function Home() {
         </div>
         <div className="col-span-9 w-full  pt-3 pr-8 gap-3 flex flex-col">
           <ScrollBar items={banneritems}></ScrollBar>
-          <ScrollFood items={TodayFood}></ScrollFood>
+          <ScrollFood items={TodayFood} cate={1}></ScrollFood>
           <ScrollFood items={TodayFood}></ScrollFood>
         </div>
       </div>

@@ -10,7 +10,8 @@ export class CategoriesService {
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
   ) {}
-  findAll(): Promise<Category[]> {
-    return this.categoryRepository.find();
+  async findAll(): Promise<Category[]> {
+    const categories = await this.categoryRepository.find();
+    return categories;
   }
 }

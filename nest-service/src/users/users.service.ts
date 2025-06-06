@@ -12,15 +12,15 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async create(username: string, plainPassword: string) {
-    const saltOrRounds = 10;
-    const hashedPassword = await bcrypt.hash(plainPassword, saltOrRounds);
-    const user = this.usersRepository.create({
-      username,
-      password: hashedPassword,
-    });
-    return this.usersRepository.save(user);
-  }
+  // async create(username: string, plainPassword: string) {
+  //   const saltOrRounds = 10;
+  //   const hashedPassword = await bcrypt.hash(plainPassword, saltOrRounds);
+  //   const user = this.usersRepository.create({
+  //     username,
+  //     password: hashedPassword,
+  //   });
+  //   return this.usersRepository.save(user);
+  // }
   async findOneByUsername(username: string): Promise<any> {
     return this.usersRepository.findOne({ where: { username } });
   }

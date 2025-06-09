@@ -8,6 +8,7 @@ import { UsersController } from './users/users.controller';
 import { AuthController } from './auth/auth.controller';
 import { CategoriesModule } from './categories/categories.module';
 import { CategoriesController } from './categories/categories.controller';
+import { FoodsModule } from './foods/foods.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,12 +19,14 @@ import { CategoriesController } from './categories/categories.controller';
       password: '123456', // pass DB
       database: 'mydatabase', // tên database
       entities: [__dirname + '/**/*.entity{.ts,.js}'], // nơi chứa entity
-      synchronize: true, // tự động sync entity với DB (chỉ dùng dev)
+      synchronize: false, // tự động sync entity với DB (chỉ dùng dev)
       logging: true,
+      migrationsRun: true,
     }),
     UsersModule,
     AuthModule,
     CategoriesModule,
+    FoodsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

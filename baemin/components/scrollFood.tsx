@@ -2,11 +2,12 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { BhuTuka_Expanded_One } from "next/font/google";
 import { title } from "process";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getCategoriesDetail } from "@/app/service";
 
 export default function ScrollBar({
   items,
@@ -17,6 +18,7 @@ export default function ScrollBar({
 }) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [list, setList] = useState<any[]>([]);
   const handleNavigate = () => {
     router.push("/detailfood");
   };
@@ -36,6 +38,15 @@ export default function ScrollBar({
     }
   };
 
+  useEffect(() => {
+    if (cate) {
+      getCategoriesDetail(cate).then((res) => {
+        if (res.status === 200 && res.data) {
+          setList(res.data);
+        }
+      });
+    }
+  }, [cate]);
   return (
     <>
       <div
@@ -63,45 +74,87 @@ export default function ScrollBar({
               ref={containerRef}
               className=" scroll-container  w-full h-full flex flex-row gap-3"
             >
-              {items.items.map((item: any, index: any) => (
-                <div
-                  onClick={handleNavigate}
-                  className=" group w-48 h-full cursor-pointer "
-                  key={index}
-                >
-                  <div className="w-full h-2/3">
-                    <div
-                      className="group-hover:brightness-75"
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "100%",
-                      }}
-                    >
-                      <Image
-                        layout="fill"
-                        objectFit="cover"
-                        src={item.img}
-                        alt={""}
-                      ></Image>
+              {!cate &&
+                items.items.map((item: any, index: any) => (
+                  <div
+                    onClick={handleNavigate}
+                    className=" group w-48 h-full cursor-pointer "
+                    key={index}
+                  >
+                    <div className="w-full h-2/3">
+                      <div
+                        className="group-hover:brightness-75"
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        <Image
+                          layout="fill"
+                          objectFit="cover"
+                          src={item.img}
+                          alt={""}
+                        ></Image>
+                      </div>
+                    </div>
+                    <div className="group-hover:bg-slate-50 w-full h-1/3  flex flex-col pl-2 pr-2 border-solid border-2  border-beamin-50">
+                      <div className="w-full truncate text-base ">
+                        <span> {item.name} </span>
+                      </div>
+                      <div
+                        className="w-full truncate text-sm "
+                        style={{ color: "#959595" }}
+                      >
+                        <span> {item.adrress}</span>
+                      </div>
+                      <div className="w-full text-sm border-t  border-beamin-50 mt-2 ">
+                        <span className="mt-2">{item.kind}</span>
+                      </div>
                     </div>
                   </div>
-                  <div className="group-hover:bg-slate-50 w-full h-1/3  flex flex-col pl-2 pr-2 border-solid border-2  border-beamin-50">
-                    <div className="w-full truncate text-base ">
-                      <span> {item.name} </span>
+                ))}
+              {cate &&
+                list.length > 0 &&
+                list.map((item: any, index: any) => (
+                  <div
+                    onClick={handleNavigate}
+                    className=" group w-48 h-full cursor-pointer "
+                    key={index}
+                  >
+                    <div className="w-full h-2/3">
+                      <div
+                        className="group-hover:brightness-75"
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          height: "100%",
+                        }}
+                      >
+                        <Image
+                          layout="fill"
+                          objectFit="cover"
+                          src={"/food/ga1.jpg"}
+                          alt={""}
+                        ></Image>
+                      </div>
                     </div>
-                    <div
-                      className="w-full truncate text-sm "
-                      style={{ color: "#959595" }}
-                    >
-                      <span> {item.adrress}</span>
-                    </div>
-                    <div className="w-full text-sm border-t  border-beamin-50 mt-2 ">
-                      <span className="mt-2">{item.kind}</span>
+                    <div className="group-hover:bg-slate-50 w-full h-1/3  flex flex-col pl-2 pr-2 border-solid border-2  border-beamin-50">
+                      <div className="w-full truncate text-base ">
+                        <span> {item.name} </span>
+                      </div>
+                      <div
+                        className="w-full truncate text-sm "
+                        style={{ color: "#959595" }}
+                      >
+                        <span> {item.name}</span>
+                      </div>
+                      <div className="w-full text-sm border-t  border-beamin-50 mt-2 ">
+                        <span className="mt-2">{item.description}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
             {currentIndex < items.items.length - 1 && (
               <button

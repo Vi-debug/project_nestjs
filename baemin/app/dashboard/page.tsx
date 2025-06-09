@@ -8,6 +8,7 @@ import { getCategories } from "./service";
 
 export default function Home() {
   const [list, setList] = useState<any[]>([]);
+  const [cate, setCate] = useState<number>(-1);
   const items = [
     {
       name: "Gà Rán",
@@ -126,6 +127,9 @@ export default function Home() {
               <div
                 key={index}
                 className="flex flex-col gap-3 cursor-pointer hover:bg-slate-100"
+                onClick={() => {
+                  setCate(item.id);
+                }}
               >
                 <div className="flex flex-row items-center gap-1">
                   <Image
@@ -142,8 +146,11 @@ export default function Home() {
         </div>
         <div className="col-span-9 w-full  pt-3 pr-8 gap-3 flex flex-col">
           <ScrollBar items={banneritems}></ScrollBar>
-          <ScrollFood items={TodayFood} cate={1}></ScrollFood>
-          <ScrollFood items={TodayFood}></ScrollFood>
+          {cate === -1 ? (
+            <ScrollFood items={TodayFood}></ScrollFood>
+          ) : (
+            <ScrollFood items={TodayFood} cate={cate}></ScrollFood>
+          )}
         </div>
       </div>
     </>
